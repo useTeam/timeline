@@ -1,0 +1,94 @@
+{
+  "events": [
+    {
+      "id": "3188",
+      "date": "2026-06-10",
+      "title": "📘ENTREGA 35 Q2📘",
+      "description": "Durante el período previo a esta entrega se trabajará en la preparación de los documentos Q2 correspondientes a aquellos proyectos cuyos documentos Q1 hayan sido respondidos y validados.\n\n**Al día 06/05/2026 se registran 25 Q1 respondidos y aprobados para continuar el proceso.**\n\nProyectos priorizados\n- U001 — Kathe\n- U008 — Valen\n- U009 — Kathe\n- U010 — Carlos\n- U011 — Ivan\n- U013 — Ivan\n- U014 — Valen\n- U016---\n- U019---\n- U020---\n- U021 — Valen\n- U022 — Ivan\n- U023 — Carlos\n- U024 — Kathe\n- U025 — Jon\n- U026 — Carlos\n- U027 — Carlos v1 / Valen v2\n- U028 — Carlos v1 / Kathe v4\n- U029 — Ivan v1 / v4\n- U030 — Ivan v1 / v3 — Kathe v2\n- U031 — Ivan\n- U032 — Ivan v1 / v2\n- U033 — Valen / Ivan\n- U034 — Valen v1 / v2\n- U035 — Valen\n\n*Estos proyectos tendrán prioridad operativa y documental dentro del flujo de trabajo de la etapa Q2.*",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "documentos"
+    },
+    {
+      "id": "7af7",
+      "date": "2026-05-22",
+      "title": "📦ÚLTIMOS ENTREGABLES + FASE 1 COMPLETADOS Y CARGADOS📦",
+      "description": "Para esta fecha deberán encontrarse cargados en wiki los últimos entregables correspondientes a la Fase 1, incluyendo documentación y capturas necesarias para la elaboración de los documentos Q2.\n\nEl objetivo de este cierre parcial es permitir que los equipos de diseño y documentación dispongan del tiempo suficiente para completar sus respectivas secciones con la anticipación requerida.\n\nEs importante considerar que, desde la fecha de kickoff, los entregables y capturas de Fase 1 deberán ir elevándose progresivamente a medida que sean completados. Esto permitirá que los documentos Q2 también puedan evolucionar y completarse de manera incremental conforme se recibe nueva información.",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "entregables"
+    },
+    {
+      "id": "ec9e",
+      "date": "2026-12-10",
+      "title": "🏁ENTREGA FINAL DOCUMENTOS Q5 Y CIERRE DEL DESAFÍO BETAS 2026🏁",
+      "description": "En esta fecha se realizará la entrega final y consolidada de los 35 documentos Q5 correspondientes al desafío Betas 2026.\n\nA partir de este momento el equipo quedará atento a:\n\n- Solicitudes de ampliación de evidencia.\n- Solicitudes de reducción de evidencia.\n- Iteraciones documentales.\n- Observaciones técnicas.\n- Ajustes derivados del proceso de revisión y certificación.",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "documentos"
+    },
+    {
+      "id": "08bf",
+      "date": "2026-09-10",
+      "title": "📂FECHA LÍMITE DE ENTREGABLES PARA Q4📂",
+      "description": "Para esta fecha deberán encontrarse cargados en OpenProject los últimos entregables y capturas correspondientes a la Fase 2 del desafío.\n\nEl objetivo continúa siendo garantizar el tiempo operativo necesario para que los equipos de diseño y documentación puedan completar los documentos Q4 con la anticipación adecuada.\n\nTal como ocurrió en etapas anteriores, las evidencias deberán ir subiendo progresivamente desde el kickoff de la fase, permitiendo así una construcción iterativa y continua de los documentos.",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "entregables"
+    },
+    {
+      "id": "b451",
+      "date": "2026-10-23",
+      "title": "🧠KICKOFF DOCUMENTOS Q5🧠",
+      "description": "A partir del viernes 23/10/2026 comenzará la etapa final del desafío documental: la construcción de los documentos Q5.\n\nEsta fase requerirá un volumen considerablemente superior de evidencia técnica y funcional.\n\n**Evidencias estimadas solicitadas**\n\n- Aproximadamente 20 capturas de código fuente frontend.\n- Aproximadamente 20 capturas de código fuente backend.\n- Aproximadamente 20 capturas de UI frontend.\n- Aproximadamente 20 capturas de Figma.\n- Aproximadamente 20 capturas de wireframes.\n- Evidencias disponibles de módulos de IA.\n- Aproximadamente 15 capturas de testing frontend.\n- Aproximadamente 15 capturas de testing backend.\n- Evidencias disponibles de testing de módulos de IA.\n\n*Esta etapa buscará consolidar el mayor nivel de profundidad técnica y trazabilidad documental de todo el desafío Betas 2026.*",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "kickoff"
+    },
+    {
+      "id": "770d",
+      "date": "2026-04-10",
+      "title": "🚀 Kickoff Inicial — Lanzamiento del Desafío Betas 2026",
+      "description": "Durante el kickoff inicial se realizó la presentación oficial del programa Betas 2026, donde los equipos recibieron la lista completa de proyectos asignados, junto con la documentación base, lineamientos técnicos y premisas de trabajo necesarias para comenzar la construcción de cada beta.\n\nEn esta instancia se comunicó formalmente el objetivo principal de la primera etapa del desafío: preparar el entregable documental y desarrollar la Fase 1 de construcción de la beta, cuyo contenido será utilizado posteriormente para la confección de los documentos Q2.\n\nRequisitos establecidos para la Fase 1\n\n**Los equipos de desarrollo deberán generar y elevar al OpenProject los siguientes entregables:**\n\n- Captura de pantalla de la estructura de carpetas del frontend.\n- Captura de pantalla de la estructura de carpetas del backend.\n- Entre 5 y 12 capturas de interfaz de usuario, priorizadas desde las vistas más relevantes hacia las secundarias:\n- Core del sistema\n- Dashboard\n- Landing Page (parte superior e inferior)\n- Notificaciones\n- Login\n- Registro\n- Recuperación de contraseña\n- Captura de pantalla de al menos 4 servicios del backend.\n\n*Se informó además que estas evidencias formarán parte de la Versión 1 del documento de seguimiento Q2, pudiendo existir solicitudes adicionales de capturas por parte de la certificadora, las cuales serán notificadas con la debida antelación.*",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "kickoff"
+    },
+    {
+      "id": "91af",
+      "date": "2026-06-12",
+      "title": "🧩COMIENZO DE CONSTRUCCIÓN DEL DOCUMENTO Q4🧩",
+      "description": "A partir del viernes 12/06/2026 comenzará oficialmente la construcción de los documentos Q4.\n\nEn esta etapa aumentará significativamente la solicitud de evidencias técnicas y visuales, incluyendo:\n\n- Capturas de UI.\n- Capturas de frontend.\n- Capturas de backend.\n- Capturas de código fuente.\n- Evidencias de diseño. (MAGUI)\n- Wireframes. (LO HACE MAGUI)\n- Diagramación. (DOCUMENTACION)\n- Capturas de Figma. (MAGUI)\n\n**Objetivo de esta fase**\n\nLa metodología consistirá en tomar como base los 35 documentos Q2 ya confeccionados y generar una copia evolucionada denominada Q4. (LO HACE DOCUMENTACION)\n\nEl objetivo será escalar técnicamente cada documento, incorporando:\n\n- Mayor cantidad de capturas.\n- Explicaciones técnicas más profundas.\n- Evidencia visual ampliada.\n- Mejor trazabilidad del desarrollo.\n- Responsabilidades del equipo de desarrollo\n\nEl equipo de desarrollo deberá:\n\n- Actualizar el backlog en caso de ser necesario.\n- Actualizar el modelo de datos cuando corresponda.\n- Informar cualquier modificación sobre los entregables documentales en sus nuevas versiones.\n- Mantener sincronización constante con diseño y documentación.\n\n*La lista exacta de entregables y el número definitivo de capturas será comunicado posteriormente mediante actualización oficial de la etapa.*",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "kickoff"
+    },
+    {
+      "id": "84d9",
+      "date": "2026-10-20",
+      "title": "📕ENTREGA DOCUMENTOS Q4📕",
+      "description": "Fecha oficial de entrega de los 35 documentos Q4 completos.\n\nEn esta instancia los proyectos deberán contar con:\n\n- Mayor profundidad técnica.\n- Mayor volumen de evidencia visual.\n- Evolución funcional demostrable.\n- Ampliación documental respecto a Q2.",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "documentos"
+    },
+    {
+      "id": "ebaa",
+      "date": "2026-11-15",
+      "title": "📂ÚLTIMOS ENTREGABLES + FASE 3 COMPLETADOS Y CARGADOS📂",
+      "description": "Para esta fecha deberán encontrarse cargados en OpenProject los últimos entregables correspondientes a la Fase 3.\n\nEl tiempo restante posterior a esta fecha estará destinado a:\n\n- Correcciones.\n- Ajustes finales.\n- Revisión documental.\n- Consolidación de evidencias.\n- Construcción de los documentos Q5 para entrega.\n\nTal como en fases anteriores, los entregables y capturas deberán ir elevándose progresivamente a medida que se completen, permitiendo la actualización continua de los documentos Q5.",
+      "confirmed": true,
+      "scenarios": [],
+      "cardKind": "entregables"
+    },
+    {
+      "id": "c730",
+      "date": "2026-12-31",
+      "title": "🔮Futuro y Próximos Pasos del Desafío",
+      "description": "Como continuación natural del desafío Betas 2026, se realizarán reuniones estratégicas orientadas a definir la segunda etapa de evolución de los proyectos.\n\nEl objetivo será llevar las soluciones desde el estado alcanzado durante el desafío hacia versiones completamente desarrolladas, estabilizadas y listas para afrontar procesos de auditoría formal.\n\nDurante finales de noviembre de 2026 se definirán:\n\n- Recursos necesarios.\n- Equipos involucrados.\n- Plazos estimados.\n- Alcance técnico de la siguiente etapa.\n- Estrategia de escalamiento y finalización de productos.",
+      "confirmed": false,
+      "scenarios": [],
+      "cardKind": "kickoff"
+    }
+  ]
+}
