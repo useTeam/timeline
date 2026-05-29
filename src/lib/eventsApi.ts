@@ -15,8 +15,8 @@ async function check(res: Response, requestedUrl: string) {
     if (text.trimStart().startsWith("<!")) {
       throw new Error(
         `La URL ${requestedUrl} devolvió HTML en lugar de JSON. ` +
-          "Probá en el navegador: /api/health y /api/events (deben responder JSON). " +
-          "En Vercel: un solo proyecto en la raíz del repo, variable MONGODB_URI, y redeploy.",
+          "Abrí /api/health en el navegador (debe verse JSON). " +
+          "En Vercel: Root Directory = raíz del repo, variable MONGODB_URI, push + redeploy.",
       );
     }
     throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
