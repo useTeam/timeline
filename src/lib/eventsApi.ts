@@ -2,9 +2,21 @@ import type { TimelineEvent } from "../types";
 
 const SEED_URL = "/seed.json";
 
-type SeedFile = { events: TimelineEvent[] };
+type SeedFile = { events: Array<TimelineEvent & { confirmed?: boolean; scenarios?: unknown }> };
 
 let events: TimelineEvent[] | null = null;
+
+function normalizeEvent(
+  raw: TimelineEvent & { confirmed?: boolean; scenarios?: unknown },
+): TimelineEvent {
+  return {
+    id: raw.id,
+    date: raw.date,
+    title: raw.title,
+    description: raw.description,
+    cardKind: raw.cardKind ?? "entregables",
+  };
+}
 
 function sortByDate(list: TimelineEvent[]): TimelineEvent[] {
   return [...list].sort((a, b) => a.date.localeCompare(b.date));
@@ -19,7 +31,7 @@ async function load(): Promise<TimelineEvent[]> {
   }
 
   const data = (await res.json()) as SeedFile;
-  events = sortByDate(data.events);
+  events = sortByDate(data.events.map(normalizeEvent));
   return events;
 }
 

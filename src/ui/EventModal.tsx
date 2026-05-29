@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import type { EventCardKind, Scenario, TimelineEvent } from "../types";
+import type { EventCardKind, TimelineEvent } from "../types";
 import { addDaysIso, clamp, dayOffset } from "../lib/dates";
 import { toast } from "sonner";
 
@@ -20,10 +20,6 @@ type Props = {
   onSaved: (input: Omit<TimelineEvent, "id">) => Promise<void>;
   onDelete: () => Promise<void>;
 };
-
-function newScenarioId(): string {
-  return Math.random().toString(16).slice(2, 10);
-}
 
 const CARD_KIND_OPTIONS: { value: EventCardKind; label: string; hint: string }[] = [
   { value: "kickoff", label: "Kick off", hint: "Verde" },
@@ -163,8 +159,6 @@ export function EventModal({
         date: state.seedDateIso,
         title: "",
         description: "",
-        confirmed: true,
-        scenarios: [],
         cardKind: "entregables",
       };
     }
@@ -176,8 +170,6 @@ export function EventModal({
       date: startIso,
       title: "",
       description: "",
-      confirmed: true,
-      scenarios: [],
       cardKind: "entregables",
     };
   }, [event, isCreate, startIso, state]);
@@ -208,10 +200,6 @@ export function EventModal({
   const dayMin = 0;
   const dayMax = Math.max(0, dayOffset(startIso, endIso));
   const currentOffset = clamp(dayOffset(startIso, form.date), dayMin, dayMax);
-
-  function setScenario(next: Scenario[]) {
-    setForm((f) => ({ ...f, scenarios: next }));
-  }
 
   function updateDescriptionWithTransform(
     transform: (text: string, start: number, end: number) => {
@@ -278,7 +266,6 @@ export function EventModal({
         ...form,
         title: trimmedTitle,
         description: form.description.trim(),
-        scenarios: form.confirmed ? [] : form.scenarios,
         cardKind: form.cardKind ?? "entregables",
       };
       await onSaved(payload);
@@ -526,117 +513,6 @@ export function EventModal({
               )}
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-gradient-to-r from-indigo-500/5 via-emerald-500/5 to-amber-500/5 p-4 dark:border-zinc-800 dark:bg-zinc-900/20">
-              <label className="flex items-center gap-3 text-sm">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={form.confirmed}
-                  disabled={!canEdit || isView || saving}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, confirmed: e.target.checked }))
-                  }
-                />
-                Confirmado
-              </label>
-              <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                Si no está confirmado, puedes crear 2–3 escenarios posibles.
-              </div>
-            </div>
-
-            {!form.confirmed ? (
-              <div className="grid gap-3">
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-zinc-600 dark:text-zinc-300">
-                    Escenarios
-                  </div>
-                  {!isView && canEdit ? (
-                    <button
-                      className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-200 dark:hover:bg-zinc-900/60"
-                      disabled={saving}
-                      onClick={() =>
-                        setScenario([
-                          ...form.scenarios,
-                          { id: newScenarioId(), title: "", details: "" },
-                        ])
-                      }
-                    >
-                      Agregar escenario
-                    </button>
-                  ) : null}
-                </div>
-
-                {form.scenarios.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-zinc-200 p-4 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
-                    Sin escenarios todavía.
-                  </div>
-                ) : null}
-
-                <div className="max-h-[320px] overflow-y-auto pr-1">
-                  <div className="grid gap-3">
-                    {form.scenarios.map((s, idx) => (
-                      <div
-                        key={s.id}
-                        className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/20"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                            Escenario {idx + 1}
-                          </div>
-                          {!isView && canEdit ? (
-                            <button
-                              className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-200 dark:hover:bg-zinc-900/60"
-                              disabled={saving}
-                              onClick={() =>
-                                setScenario(form.scenarios.filter((x) => x.id !== s.id))
-                              }
-                            >
-                              Borrar
-                            </button>
-                          ) : null}
-                        </div>
-
-                        <div className="mt-3 grid gap-2">
-                          <label className="text-xs text-zinc-600 dark:text-zinc-300">
-                            Título
-                          </label>
-                          <input
-                            className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-100 dark:focus:border-zinc-700"
-                            value={s.title}
-                            disabled={isView || saving}
-                            onChange={(e) => {
-                              const next = form.scenarios.map((x) =>
-                                x.id === s.id ? { ...x, title: e.target.value } : x,
-                              );
-                              setScenario(next);
-                            }}
-                            placeholder="Ej: Se mueve a Octubre…"
-                          />
-                        </div>
-
-                        <div className="mt-3 grid gap-2">
-                          <label className="text-xs text-zinc-600 dark:text-zinc-300">
-                            Detalles
-                          </label>
-                          <textarea
-                            className="min-h-44 w-full resize-y rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-100 dark:focus:border-zinc-700"
-                            value={s.details}
-                            disabled={isView || saving}
-                            onChange={(e) => {
-                              const next = form.scenarios.map((x) =>
-                                x.id === s.id ? { ...x, details: e.target.value } : x,
-                              );
-                              setScenario(next);
-                            }}
-                            placeholder="Detalle del escenario…"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : null}
           </div>
         </div>
 

@@ -36,9 +36,8 @@ function estimateCardHeight(ev: TimelineEvent, cardWidthPx: number): number {
   const titleH = 8 + titleLines * 21;
   const dateRow = 18;
   const descH = ev.description?.trim() ? 44 : 22;
-  const scenH = !ev.confirmed && ev.scenarios.length > 0 ? 22 : 0;
   const padding = 30;
-  return Math.min(248, padding + titleH + dateRow + descH + scenH);
+  return Math.min(248, padding + titleH + dateRow + descH);
 }
 
 type Props = {
@@ -164,9 +163,6 @@ export function Timeline({
       const yLineBottom = up ? dotCenterY : yCardAnchor;
       const kind = cardKindOf(ev);
       const theme = CARD_THEME[kind];
-      const unconfirmedRing = !ev.confirmed
-        ? "ring-2 ring-amber-400/80 ring-offset-2 ring-offset-white dark:ring-amber-500/60 dark:ring-offset-zinc-950"
-        : "";
       return {
         ev,
         x,
@@ -179,7 +175,6 @@ export function Timeline({
         color: theme.dot,
         glow: theme.glow,
         badge: theme.badge,
-        unconfirmedRing,
       };
     });
   }
@@ -246,10 +241,6 @@ export function Timeline({
             <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-red-500" />
             Entrega de documentos
           </span>
-          <span className="inline-flex items-center gap-2 sm:ml-1">
-            <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-amber-500" />
-            No confirmado (borde ámbar)
-          </span>
         </div>
         <div className="font-mono">{events.length} eventos</div>
       </div>
@@ -306,7 +297,6 @@ export function Timeline({
                 yLineTop,
                 yLineBottom,
                 badge,
-                unconfirmedRing,
               }) => (
                 <div
                   key={ev.id}
@@ -336,7 +326,7 @@ export function Timeline({
                   />
                   <button
                     type="button"
-                    className={`absolute -translate-x-1/2 rounded-2xl border p-4 text-left shadow-sm backdrop-blur hover:brightness-[1.02] dark:hover:brightness-110 ${badge} ${unconfirmedRing}`}
+                    className={`absolute -translate-x-1/2 rounded-2xl border p-4 text-left shadow-sm backdrop-blur hover:brightness-[1.02] dark:hover:brightness-110 ${badge}`}
                     style={{ top: yCardAnchor, width: cardWidthPx, maxWidth: cardWidthPx }}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -358,11 +348,6 @@ export function Timeline({
                     ) : (
                       <div className="mt-2 text-sm opacity-70">Sin descripción</div>
                     )}
-                    {!ev.confirmed && ev.scenarios.length > 0 ? (
-                      <div className="mt-2 text-xs text-zinc-700 dark:text-zinc-300">
-                        {ev.scenarios.length} escenarios
-                      </div>
-                    ) : null}
                   </button>
                 </div>
               ),
