@@ -7,6 +7,21 @@ This template provides a minimal setup to get React working in Vite with HMR and
 - **Login**: `/login` (público)
 - **Timeline**: `/timeline` (privado; requiere sesión)
 
+## Desarrollo (monorepo)
+
+```bash
+nvm use                            # lee .nvmrc → Node 20.19+
+cp server/.env.example server/.env   # configurar MONGODB_URI
+npm install
+npm run dev                          # API en :3001 + Vite en :5173
+```
+
+La API Express vive en `server/`. Al arrancar, si la colección está vacía, importa los eventos desde `db.json` a MongoDB.
+
+```bash
+npm run seed -w @timeline/server      # seed manual
+```
+
 ## Usuarios
 
 - **Público (solo lectura)**: `dev.public` / `dev.public2026`

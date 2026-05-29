@@ -23,8 +23,8 @@ const END_ISO = "2026-12-31";
 type ModalState =
   | { mode: "closed" }
   | { mode: "create"; seedDateIso: string }
-  | { mode: "view"; eventId: number }
-  | { mode: "edit"; eventId: number };
+  | { mode: "view"; eventId: string }
+  | { mode: "edit"; eventId: string };
 
 export const App = () => {
   const navigate = useNavigate();

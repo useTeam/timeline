@@ -48,7 +48,7 @@ type Props = {
   pxPerDay: number;
   loading: boolean;
   canCreate: boolean;
-  onPointClick: (eventId: number) => void;
+  onPointClick: (eventId: string) => void;
   onCreateAtDate: (dateIso: string) => void;
 };
 

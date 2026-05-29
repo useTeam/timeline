@@ -8,7 +8,7 @@ export type Scenario = {
 export type EventCardKind = "kickoff" | "entregables" | "documentos";
 
 export type TimelineEvent = {
-  id: number;
+  id: string;
   date: string; // YYYY-MM-DD
   title: string;
   description: string;

@@ -29,7 +29,7 @@ export async function createEvent(
 }
 
 export async function updateEvent(
-  id: number,
+  id: string,
   patch: Partial<Omit<TimelineEvent, "id">>,
 ): Promise<TimelineEvent> {
   const res = await check(
@@ -42,7 +42,7 @@ export async function updateEvent(
   return (await res.json()) as TimelineEvent;
 }
 
-export async function deleteEvent(id: number): Promise<void> {
+export async function deleteEvent(id: string): Promise<void> {
   await check(await fetch(`${BASE_URL}/events/${id}`, { method: "DELETE" }));
 }
 

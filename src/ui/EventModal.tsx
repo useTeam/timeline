@@ -6,8 +6,8 @@ import { toast } from "sonner";
 type ModalState =
   | { mode: "closed" }
   | { mode: "create"; seedDateIso: string }
-  | { mode: "view"; eventId: number }
-  | { mode: "edit"; eventId: number };
+  | { mode: "view"; eventId: string }
+  | { mode: "edit"; eventId: string };
 
 type Props = {
   startIso: string;
