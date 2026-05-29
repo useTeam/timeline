@@ -22,42 +22,28 @@ La API Express vive en `server/`. Al arrancar, si la colección está vacía, im
 npm run seed --prefix server            # seed manual
 ```
 
-## Deploy en Vercel (dos proyectos)
+## Deploy en Vercel (un solo proyecto)
 
-El monorepo tiene **frontend** (raíz) y **backend** (`server/`). Son **dos deploys distintos** en Vercel:
-
-### 1. API (backend)
+Front y API van juntos en **un** proyecto con **Root Directory** = raíz del repo (`.`).
 
 | Campo | Valor |
 |-------|--------|
-| Proyecto | p. ej. `timeline-server` |
-| **Root Directory** | **`server`** (obligatorio; si es `.` despliega el React) |
-| Variables | `MONGODB_URI` |
+| Root Directory | `.` (vacío) |
+| Framework | Vite |
+| Variable | **`MONGODB_URI`** (Atlas) |
 
-**Comprobar:** abrí `https://TU-API.vercel.app/events` en el navegador.  
-✅ Debe verse JSON con eventos.  
-❌ Si ves la pantalla de login → ese proyecto no es el API; corregí Root Directory y redeploy.
+La API vive en `api/index.ts` → rutas bajo `/api/events`, `/api/health`.  
+El React usa `/api` en producción (mismo dominio, sin proxy externo).
 
-Después actualizá en `vercel.json` del frontend la URL del proxy (`destination`) con la URL real del API.
+**Comprobar tras el deploy:**
 
-### 2. Web (frontend) — proyecto nuevo
+- `https://TU-APP.vercel.app/api/health` → `{"ok":true}`
+- `https://TU-APP.vercel.app/api/events` → JSON con eventos
+- `https://TU-APP.vercel.app` → login / timeline
 
-Creá **otro** proyecto en Vercel conectado al mismo repo:
+No uses un segundo proyecto apuntando solo a `server/` salvo que sepas configurarlo; `timeline-server-ten.vercel.app` hoy sirve el front por error.
 
-| Campo | Valor |
-|-------|--------|
-| Proyecto | p. ej. `timeline` o `timeline-web` |
-| **Root Directory** | vacío / `.` (raíz del repo, **no** `server`) |
-| Framework | Vite (auto) |
-| Variables | No hace falta `VITE_API_URL` (el front usa `/api` + proxy en `vercel.json`). |
-
-En `vercel.json`, la línea `destination` del proxy debe ser la URL del proyecto **API** (no del front).
-
-URL: `https://timeline-xxx.vercel.app` → React (login, timeline).
-
-> Si Root Directory apunta a `server`, el navegador muestra el backend. Eso es correcto para el proyecto API; el front va en un segundo proyecto sin `server` como raíz.
-
-Seed en producción (una vez):
+Seed en producción (una vez, desde tu PC):
 
 ```bash
 MONGODB_URI="mongodb+srv://..." npm run seed --prefix server

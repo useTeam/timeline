@@ -14,10 +14,9 @@ async function check(res: Response, requestedUrl: string) {
     const text = await res.text().catch(() => "");
     if (text.trimStart().startsWith("<!")) {
       throw new Error(
-        `La URL ${requestedUrl} devolvió HTML (página web), no JSON de la API. ` +
-          "En Vercel, el proyecto del backend debe tener Root Directory = server. " +
-          "Probá en el navegador: https://TU-API.vercel.app/events (debe verse JSON). " +
-          "Luego actualizá el proxy en vercel.json del frontend con esa URL y redeploy.",
+        `La URL ${requestedUrl} devolvió HTML en lugar de JSON. ` +
+          "Probá en el navegador: /api/health y /api/events (deben responder JSON). " +
+          "En Vercel: un solo proyecto en la raíz del repo, variable MONGODB_URI, y redeploy.",
       );
     }
     throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
