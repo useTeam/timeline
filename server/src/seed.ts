@@ -2,8 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import { EventModel } from "./models/Event.js";
+import { connectDb } from "./db/connect.js";
 
 dotenv.config();
 
@@ -42,8 +42,9 @@ async function main() {
     process.exit(1);
   }
 
-  await mongoose.connect(uri);
+  await connectDb();
   await seedIfEmpty();
+  const mongoose = await import("mongoose");
   await mongoose.disconnect();
 }
 

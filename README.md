@@ -22,6 +22,41 @@ La API Express vive en `server/`. Al arrancar, si la colección está vacía, im
 npm run seed -w @timeline/server      # seed manual
 ```
 
+## Deploy en Vercel (dos proyectos)
+
+El monorepo tiene **frontend** (raíz) y **backend** (`server/`). Son **dos deploys distintos** en Vercel:
+
+### 1. API (backend) — ya lo tenés
+
+| Campo | Valor |
+|-------|--------|
+| Proyecto | p. ej. `timeline-server` |
+| **Root Directory** | `server` |
+| Variables | `MONGODB_URI` |
+
+URL: `https://timeline-server-ten.vercel.app` → solo API (`/events`, `/health`).
+
+### 2. Web (frontend) — proyecto nuevo
+
+Creá **otro** proyecto en Vercel conectado al mismo repo:
+
+| Campo | Valor |
+|-------|--------|
+| Proyecto | p. ej. `timeline` o `timeline-web` |
+| **Root Directory** | vacío / `.` (raíz del repo, **no** `server`) |
+| Framework | Vite (auto) |
+| Variables | `VITE_API_URL=https://timeline-server-ten.vercel.app` |
+
+URL: `https://timeline-xxx.vercel.app` → React (login, timeline).
+
+> Si Root Directory apunta a `server`, el navegador muestra el backend. Eso es correcto para el proyecto API; el front va en un segundo proyecto sin `server` como raíz.
+
+Seed en producción (una vez):
+
+```bash
+MONGODB_URI="mongodb+srv://..." npm run seed -w @timeline/server
+```
+
 ## Usuarios
 
 - **Público (solo lectura)**: `dev.public` / `dev.public2026`
