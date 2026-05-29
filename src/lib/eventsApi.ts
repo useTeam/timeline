@@ -1,20 +1,23 @@
 import type { TimelineEvent } from "../types";
 
-/** En prod usa /api (proxy en vercel.json). En dev, /api vía vite o localhost directo. */
 function apiBaseUrl(): string {
-  const fromEnv = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
-  if (fromEnv) return fromEnv;
-  if (import.meta.env.DEV) return "http://localhost:3001";
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:3001";
+  }
+  // Producción: mismo origen → proxy en vercel.json (no usar VITE_API_URL si apunta al front)
   return "/api";
 }
 
-async function check(res: Response) {
+async function check(res: Response, requestedUrl: string) {
   const contentType = res.headers.get("content-type") ?? "";
   if (!res.ok || !contentType.includes("application/json")) {
     const text = await res.text().catch(() => "");
     if (text.trimStart().startsWith("<!")) {
       throw new Error(
-        "La API devolvió HTML en lugar de JSON. Revisá VITE_API_URL en Vercel o usá el proxy /api (redeploy del front).",
+        `La URL ${requestedUrl} devolvió HTML (página web), no JSON de la API. ` +
+          "En Vercel, el proyecto del backend debe tener Root Directory = server. " +
+          "Probá en el navegador: https://TU-API.vercel.app/events (debe verse JSON). " +
+          "Luego actualizá el proxy en vercel.json del frontend con esa URL y redeploy.",
       );
     }
     throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
@@ -23,21 +26,22 @@ async function check(res: Response) {
 }
 
 export async function listEvents(): Promise<TimelineEvent[]> {
-  const res = await check(
-    await fetch(`${apiBaseUrl()}/events?_sort=date&_order=asc`),
-  );
+  const url = `${apiBaseUrl()}/events?_sort=date&_order=asc`;
+  const res = await check(await fetch(url), url);
   return (await res.json()) as TimelineEvent[];
 }
 
 export async function createEvent(
   input: Omit<TimelineEvent, "id">,
 ): Promise<TimelineEvent> {
+  const url = `${apiBaseUrl()}/events`;
   const res = await check(
-    await fetch(`${apiBaseUrl()}/events`, {
+    await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
     }),
+    url,
   );
   return (await res.json()) as TimelineEvent;
 }
@@ -46,17 +50,20 @@ export async function updateEvent(
   id: string,
   patch: Partial<Omit<TimelineEvent, "id">>,
 ): Promise<TimelineEvent> {
+  const url = `${apiBaseUrl()}/events/${id}`;
   const res = await check(
-    await fetch(`${apiBaseUrl()}/events/${id}`, {
+    await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
     }),
+    url,
   );
   return (await res.json()) as TimelineEvent;
 }
 
 export async function deleteEvent(id: string): Promise<void> {
-  await check(await fetch(`${apiBaseUrl()}/events/${id}`, { method: "DELETE" }));
+  const url = `${apiBaseUrl()}/events/${id}`;
+  await check(await fetch(url, { method: "DELETE" }), url);
 }
 

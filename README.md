@@ -26,15 +26,19 @@ npm run seed --prefix server            # seed manual
 
 El monorepo tiene **frontend** (raíz) y **backend** (`server/`). Son **dos deploys distintos** en Vercel:
 
-### 1. API (backend) — ya lo tenés
+### 1. API (backend)
 
 | Campo | Valor |
 |-------|--------|
 | Proyecto | p. ej. `timeline-server` |
-| **Root Directory** | `server` |
+| **Root Directory** | **`server`** (obligatorio; si es `.` despliega el React) |
 | Variables | `MONGODB_URI` |
 
-URL: `https://timeline-server-ten.vercel.app` → solo API (`/events`, `/health`).
+**Comprobar:** abrí `https://TU-API.vercel.app/events` en el navegador.  
+✅ Debe verse JSON con eventos.  
+❌ Si ves la pantalla de login → ese proyecto no es el API; corregí Root Directory y redeploy.
+
+Después actualizá en `vercel.json` del frontend la URL del proxy (`destination`) con la URL real del API.
 
 ### 2. Web (frontend) — proyecto nuevo
 
@@ -45,7 +49,9 @@ Creá **otro** proyecto en Vercel conectado al mismo repo:
 | Proyecto | p. ej. `timeline` o `timeline-web` |
 | **Root Directory** | vacío / `.` (raíz del repo, **no** `server`) |
 | Framework | Vite (auto) |
-| Variables | `VITE_API_URL=https://timeline-server-ten.vercel.app` |
+| Variables | No hace falta `VITE_API_URL` (el front usa `/api` + proxy en `vercel.json`). |
+
+En `vercel.json`, la línea `destination` del proxy debe ser la URL del proyecto **API** (no del front).
 
 URL: `https://timeline-xxx.vercel.app` → React (login, timeline).
 
