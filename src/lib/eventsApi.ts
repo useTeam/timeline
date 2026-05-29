@@ -1,18 +1,31 @@
 import type { TimelineEvent } from "../types";
 
-const BASE_URL =
-  import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "http://localhost:3001";
+/** En prod usa /api (proxy en vercel.json). En dev, /api vía vite o localhost directo. */
+function apiBaseUrl(): string {
+  const fromEnv = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  if (import.meta.env.DEV) return "http://localhost:3001";
+  return "/api";
+}
 
 async function check(res: Response) {
-  if (!res.ok) {
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!res.ok || !contentType.includes("application/json")) {
     const text = await res.text().catch(() => "");
+    if (text.trimStart().startsWith("<!")) {
+      throw new Error(
+        "La API devolvió HTML en lugar de JSON. Revisá VITE_API_URL en Vercel o usá el proxy /api (redeploy del front).",
+      );
+    }
     throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
   }
   return res;
 }
 
 export async function listEvents(): Promise<TimelineEvent[]> {
-  const res = await check(await fetch(`${BASE_URL}/events?_sort=date&_order=asc`));
+  const res = await check(
+    await fetch(`${apiBaseUrl()}/events?_sort=date&_order=asc`),
+  );
   return (await res.json()) as TimelineEvent[];
 }
 
@@ -20,7 +33,7 @@ export async function createEvent(
   input: Omit<TimelineEvent, "id">,
 ): Promise<TimelineEvent> {
   const res = await check(
-    await fetch(`${BASE_URL}/events`, {
+    await fetch(`${apiBaseUrl()}/events`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
@@ -34,7 +47,7 @@ export async function updateEvent(
   patch: Partial<Omit<TimelineEvent, "id">>,
 ): Promise<TimelineEvent> {
   const res = await check(
-    await fetch(`${BASE_URL}/events/${id}`, {
+    await fetch(`${apiBaseUrl()}/events/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
@@ -44,6 +57,6 @@ export async function updateEvent(
 }
 
 export async function deleteEvent(id: string): Promise<void> {
-  await check(await fetch(`${BASE_URL}/events/${id}`, { method: "DELETE" }));
+  await check(await fetch(`${apiBaseUrl()}/events/${id}`, { method: "DELETE" }));
 }
 
