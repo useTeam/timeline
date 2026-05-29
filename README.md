@@ -1,125 +1,68 @@
-# React + TypeScript + Vite
+# Timeline Betas 2026
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Timeline de hitos del desafío Betas. Los datos viven en **MongoDB**; el front solo consume la API.
 
-## App
+## Estructura
 
-- **Login**: `/login` (público)
-- **Timeline**: `/timeline` (privado; requiere sesión)
-
-## Desarrollo (monorepo)
-
-```bash
-nvm use                            # lee .nvmrc → Node 20.19+
-cp server/.env.example server/.env   # configurar MONGODB_URI
-npm install
-npm run dev                          # API en :3001 + Vite en :5173
+```
+api/index.ts          → entrada Vercel (producción)
+server/               → Express + Mongoose (código compartido)
+  src/createApp.ts    → rutas /events, /health
+  data/seed.json      → datos iniciales (solo para el comando seed)
+src/                  → React + Vite
 ```
 
-La API Express vive en `server/`. Al arrancar, si la colección está vacía, importa los eventos desde `db.json` a MongoDB.
+Solo hay **una** carpeta `api/` (en la raíz, para Vercel). El backend local corre desde `server/`.
+
+## Desarrollo local
 
 ```bash
-npm run seed --prefix server            # seed manual
+nvm use
+cp server/.env.example server/.env   # MONGODB_URI
+npm install                          # instala raíz + server/
+npm run db:seed                      # carga seed.json → MongoDB (una vez)
+npm run dev                          # API :3001 + Vite :5173
 ```
 
-## Deploy en Vercel (un solo proyecto)
-
-Front y API van juntos en **un** proyecto con **Root Directory** = raíz del repo (`.`).
-
-| Campo | Valor |
-|-------|--------|
-| Root Directory | `.` (vacío) |
-| Framework | Vite |
-| Variable | **`MONGODB_URI`** (Atlas) |
-
-La API vive en `api/index.ts` → rutas bajo `/api/events`, `/api/health`.  
-El React usa `/api` en producción (mismo dominio, sin proxy externo).
-
-**Comprobar tras el deploy:**
-
-- `https://TU-APP.vercel.app/api/health` → `{"ok":true}`
-- `https://TU-APP.vercel.app/api/events` → JSON con eventos
-- `https://TU-APP.vercel.app` → login / timeline
-
-No uses un segundo proyecto apuntando solo a `server/` salvo que sepas configurarlo; `timeline-server-ten.vercel.app` hoy sirve el front por error.
-
-Seed en producción (una vez, desde tu PC):
+## Cargar / recargar la base de datos
 
 ```bash
-MONGODB_URI="mongodb+srv://..." npm run seed --prefix server
+npm run db:seed
 ```
+
+- Lee `server/data/seed.json` (antes `db.json` en la raíz).
+- Si ya hay eventos en MongoDB, no hace nada.
+- Para **reemplazar** todo:
+
+```bash
+npm run db:seed -- --force
+```
+
+Requiere `MONGODB_URI` en `server/.env`.
 
 ## Usuarios
 
-- **Público (solo lectura)**: `dev.public` / `dev.public2026`
-- **Admin (CRUD completo)**: `jon.pereyra` / `jon2026`
+| Rol | Usuario | Contraseña |
+|-----|---------|------------|
+| Solo lectura | `dev.public` | `dev.public2026` |
+| Admin (CRUD) | `jon.pereyra` | `jon2026` |
 
-Currently, two official plugins are available:
+## Deploy en Vercel
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Un solo proyecto, **Root Directory** = raíz del repo.
 
-## React Compiler
+| Variable | Valor |
+|----------|--------|
+| `MONGODB_URI` | URI de Atlas |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Tras el deploy, cargá la DB desde tu PC:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+MONGODB_URI="mongodb+srv://..." npm run db:seed
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Comprobar:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `/api/health` → `{"ok":true}`
+- `/api/events` → JSON
+- `/` → app React
