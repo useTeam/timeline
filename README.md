@@ -2,17 +2,22 @@
 
 Timeline de hitos del desafío Betas. Los datos viven en **MongoDB**; el front solo consume la API.
 
-## Estructura
+## Estructura y flujo de datos
 
 ```
-api/index.ts          → entrada Vercel (producción)
-server/               → Express + Mongoose (código compartido)
-  src/createApp.ts    → rutas /events, /health
-  data/seed.json      → datos iniciales (solo para el comando seed)
+server/data/seed.json  →  npm run db:seed  →  MongoDB Atlas
+MongoDB Atlas          →  API /api/events  →  React timeline
+```
+
+- **seed.json**: solo para cargar la DB la primera vez (comando manual).
+- **En producción y en dev**: el timeline lee **MongoDB**, no el archivo JSON.
+
+```
+api/                  → funciones Vercel (/api/health, /api/events)
+server/               → Express local (:3001) + modelos Mongoose
+  data/seed.json
 src/                  → React + Vite
 ```
-
-Solo hay **una** carpeta `api/` (en la raíz, para Vercel). El backend local corre desde `server/`.
 
 ## Desarrollo local
 

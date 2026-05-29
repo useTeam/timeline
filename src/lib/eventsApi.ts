@@ -14,9 +14,9 @@ async function check(res: Response, requestedUrl: string) {
     const text = await res.text().catch(() => "");
     if (text.trimStart().startsWith("<!")) {
       throw new Error(
-        `La URL ${requestedUrl} devolvió HTML en lugar de JSON. ` +
-          "Abrí /api/health en el navegador (debe verse JSON). " +
-          "En Vercel: Root Directory = raíz del repo, variable MONGODB_URI, push + redeploy.",
+        `La URL ${requestedUrl} devolvió HTML (la app React), no la API. ` +
+          "Los datos vienen de MongoDB, no de seed.json en runtime. " +
+          "Probá /api/health, corré npm run db:seed, y en Vercel definí MONGODB_URI.",
       );
     }
     throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
