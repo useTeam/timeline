@@ -6,12 +6,9 @@
   "engines": {
     "node": ">=20.19.0"
   },
-  "workspaces": [
-    "server"
-  ],
   "scripts": {
     "dev": "concurrently -k \"npm run server\" \"vite\"",
-    "server": "npm run dev -w @timeline/server",
+    "server": "npm run dev --prefix server",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

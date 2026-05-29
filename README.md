@@ -19,7 +19,7 @@ npm run dev                          # API en :3001 + Vite en :5173
 La API Express vive en `server/`. Al arrancar, si la colección está vacía, importa los eventos desde `db.json` a MongoDB.
 
 ```bash
-npm run seed -w @timeline/server      # seed manual
+npm run seed --prefix server            # seed manual
 ```
 
 ## Deploy en Vercel (dos proyectos)
@@ -54,7 +54,7 @@ URL: `https://timeline-xxx.vercel.app` → React (login, timeline).
 Seed en producción (una vez):
 
 ```bash
-MONGODB_URI="mongodb+srv://..." npm run seed -w @timeline/server
+MONGODB_URI="mongodb+srv://..." npm run seed --prefix server
 ```
 
 ## Usuarios
