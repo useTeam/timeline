@@ -1,68 +1,61 @@
 import type { TimelineEvent } from "../types";
 
-function apiBaseUrl(): string {
-  if (import.meta.env.DEV) {
-    return import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:3001";
-  }
-  // Producción: mismo origen → proxy en vercel.json (no usar VITE_API_URL si apunta al front)
-  return "/api";
+const SEED_URL = "/seed.json";
+
+type SeedFile = { events: TimelineEvent[] };
+
+let events: TimelineEvent[] | null = null;
+
+function sortByDate(list: TimelineEvent[]): TimelineEvent[] {
+  return [...list].sort((a, b) => a.date.localeCompare(b.date));
 }
 
-async function check(res: Response, requestedUrl: string) {
-  const contentType = res.headers.get("content-type") ?? "";
-  if (!res.ok || !contentType.includes("application/json")) {
-    const text = await res.text().catch(() => "");
-    if (text.trimStart().startsWith("<!")) {
-      throw new Error(
-        `La URL ${requestedUrl} devolvió HTML (la app React), no la API. ` +
-          "Los datos vienen de MongoDB, no de seed.json en runtime. " +
-          "Probá /api/health, corré npm run db:seed, y en Vercel definí MONGODB_URI.",
-      );
-    }
-    throw new Error(`HTTP ${res.status} ${res.statusText}${text ? ` - ${text}` : ""}`);
+async function load(): Promise<TimelineEvent[]> {
+  if (events) return events;
+
+  const res = await fetch(SEED_URL);
+  if (!res.ok) {
+    throw new Error(`No se pudo cargar ${SEED_URL} (${res.status})`);
   }
-  return res;
+
+  const data = (await res.json()) as SeedFile;
+  events = sortByDate(data.events);
+  return events;
+}
+
+function newId(): string {
+  return Math.random().toString(16).slice(2, 6);
 }
 
 export async function listEvents(): Promise<TimelineEvent[]> {
-  const url = `${apiBaseUrl()}/events?_sort=date&_order=asc`;
-  const res = await check(await fetch(url), url);
-  return (await res.json()) as TimelineEvent[];
+  return load();
 }
 
 export async function createEvent(
   input: Omit<TimelineEvent, "id">,
 ): Promise<TimelineEvent> {
-  const url = `${apiBaseUrl()}/events`;
-  const res = await check(
-    await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
-    }),
-    url,
-  );
-  return (await res.json()) as TimelineEvent;
+  const list = await load();
+  const created: TimelineEvent = { ...input, id: newId() };
+  events = sortByDate([...list, created]);
+  return created;
 }
 
 export async function updateEvent(
   id: string,
   patch: Partial<Omit<TimelineEvent, "id">>,
 ): Promise<TimelineEvent> {
-  const url = `${apiBaseUrl()}/events/${id}`;
-  const res = await check(
-    await fetch(url, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(patch),
-    }),
-    url,
-  );
-  return (await res.json()) as TimelineEvent;
+  const list = await load();
+  const idx = list.findIndex((e) => e.id === id);
+  if (idx === -1) throw new Error("Evento no encontrado");
+  const updated = { ...list[idx], ...patch, id };
+  list[idx] = updated;
+  events = sortByDate(list);
+  return updated;
 }
 
 export async function deleteEvent(id: string): Promise<void> {
-  const url = `${apiBaseUrl()}/events/${id}`;
-  await check(await fetch(url, { method: "DELETE" }), url);
+  const list = await load();
+  const next = list.filter((e) => e.id !== id);
+  if (next.length === list.length) throw new Error("Evento no encontrado");
+  events = sortByDate(next);
 }
-

@@ -1,49 +1,36 @@
 # Timeline Betas 2026
 
-Timeline de hitos del desafío Betas. Los datos viven en **MongoDB**; el front solo consume la API.
+App React que lee los eventos desde **`public/seed.json`**.
 
-## Estructura y flujo de datos
-
-```
-server/data/seed.json  →  npm run db:seed  →  MongoDB Atlas
-MongoDB Atlas          →  API /api/events  →  React timeline
-```
-
-- **seed.json**: solo para cargar la DB la primera vez (comando manual).
-- **En producción y en dev**: el timeline lee **MongoDB**, no el archivo JSON.
-
-```
-api/                  → funciones Vercel (/api/health, /api/events)
-server/               → Express local (:3001) + modelos Mongoose
-  data/seed.json
-src/                  → React + Vite
-```
-
-## Desarrollo local
+## Desarrollo
 
 ```bash
 nvm use
-cp server/.env.example server/.env   # MONGODB_URI
-npm install                          # instala raíz + server/
-npm run db:seed                      # carga seed.json → MongoDB (una vez)
-npm run dev                          # API :3001 + Vite :5173
+npm install
+npm run dev
 ```
 
-## Cargar / recargar la base de datos
+Si ves carpetas `server/` o `api/` viejas en el disco:
 
 ```bash
-npm run db:seed
+npm run clean:legacy
 ```
 
-- Lee `server/data/seed.json` (antes `db.json` en la raíz).
-- Si ya hay eventos en MongoDB, no hace nada.
-- Para **reemplazar** todo:
+Abrí http://localhost:5173
 
-```bash
-npm run db:seed -- --force
-```
+## Datos
 
-Requiere `MONGODB_URI` en `server/.env`.
+| Archivo | Uso |
+|---------|-----|
+| `public/seed.json` | Datos iniciales (editá este archivo y recargá) |
+
+- Los eventos se cargan desde `public/seed.json`.
+- Los cambios del admin duran hasta recargar la página (sesión en memoria).
+- Para editar datos permanentes, modificá `public/seed.json` y hacé redeploy.
+
+## Deploy (Vercel)
+
+Un proyecto, root = raíz. Solo hace falta el build de Vite (`npm run build`).
 
 ## Usuarios
 
@@ -51,23 +38,3 @@ Requiere `MONGODB_URI` en `server/.env`.
 |-----|---------|------------|
 | Solo lectura | `dev.public` | `dev.public2026` |
 | Admin (CRUD) | `jon.pereyra` | `jon2026` |
-
-## Deploy en Vercel
-
-Un solo proyecto, **Root Directory** = raíz del repo.
-
-| Variable | Valor |
-|----------|--------|
-| `MONGODB_URI` | URI de Atlas |
-
-Tras el deploy, cargá la DB desde tu PC:
-
-```bash
-MONGODB_URI="mongodb+srv://..." npm run db:seed
-```
-
-Comprobar:
-
-- `/api/health` → `{"ok":true}`
-- `/api/events` → JSON
-- `/` → app React

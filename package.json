@@ -7,34 +7,25 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "postinstall": "npm install --prefix server",
-    "dev": "concurrently -k \"npm run server\" \"vite\"",
-    "server": "npm run dev --prefix server",
-    "db:seed": "npm run seed --prefix server",
-    "db:seed:force": "npm run seed:force --prefix server",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean:legacy": "bash scripts/clean-legacy.sh"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "mongoose": "^8.15.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.8.2",
     "sonner": "^2.0.7"
   },
   "devDependencies": {
-    "@vercel/node": "^5.1.14",
     "@tailwindcss/vite": "^4.0.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "concurrently": "^9.1.2",
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
